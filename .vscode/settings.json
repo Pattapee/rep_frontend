@@ -1,0 +1,6 @@
+{
+  "files.autoSave": "afterDelay",
+  "trailing-spaces.trimOnSave": true,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2
+}
