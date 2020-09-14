@@ -56,7 +56,6 @@ class Dashboard extends React.Component {
     body.datefrom = `${datefrom.year()}-${datefrom.month() + 1}-${datefrom.day()}`
     body.dateto = `${dateto.year()}-${dateto.month() + 1}-${dateto.day()}`
     let result = await axios.post(`${process.env.REACT_APP_API_IP}/postcodes`, body)
-    console.log(result.data)
     try {
       this.setState({
         allpostcode: result.data,
@@ -136,14 +135,21 @@ class Dashboard extends React.Component {
                       </thead>
                       <tbody className="text-center">
                         {allpostcode.map((prop, key) => {
-                          let address = prop.address.split(" ")
-                          let addresslen = address.length - 2
+                          console.log(prop.address)
+                          let addressresult = ''
+                          if (prop.address) {
+                            let address = prop.address.split(" ")
+                            let addresslen = address.length - 2
+                            addressresult = address[addresslen]
+                          } else {
+                            addressresult = ''
+                          }
                           return (
                             <tr>
                               <td>{key + 1}</td>
                               <td>{prop.F7}</td>
                               <td>{prop.address}</td>
-                              <td>{address[addresslen]}</td>
+                              <td>{addressresult}</td>
                               <td>{prop.F25}</td>
                               <td>{prop.noOrganization}</td>
                               <td>{prop.noDepartment}</td>
