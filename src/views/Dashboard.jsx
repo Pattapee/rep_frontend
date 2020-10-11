@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import React from "react";
+import React from "react"
 // reactstrap components
 import {
   Row,
@@ -13,22 +13,22 @@ import {
   Button,
   Table,
   Input,
-  Form
-} from "reactstrap";
+  Form,
+} from "reactstrap"
 
 // core components
-import PanelHeader from "components/PanelHeader/PanelHeader.jsx";
-import axios from 'axios'
-import moment from 'moment'
-import 'moment/locale/th'
-import DatePicker from "react-datepicker";
-import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import PanelHeader from "components/PanelHeader/PanelHeader.jsx"
+import axios from "axios"
+import moment from "moment"
+import "moment/locale/th"
+import DatePicker from "react-datepicker"
+import ReactHTMLTableToExcel from "react-html-table-to-excel"
 import { v4 as uuidv4 } from "uuid"
-import * as _ from 'lodash'
+import * as _ from "lodash"
 
 class Dashboard extends React.Component {
   constructor() {
-    super();
+    super()
     this.state = {
       dateCheck: new Date(),
       dateCheck2: new Date(),
@@ -36,24 +36,24 @@ class Dashboard extends React.Component {
       error: undefined,
       isLoaded: false,
       filter: "",
-    };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChangeDate = this.handleChangeDate.bind(this);
-    this.handleChangeDate2 = this.handleChangeDate2.bind(this);
+    }
+    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleChangeDate = this.handleChangeDate.bind(this)
+    this.handleChangeDate2 = this.handleChangeDate2.bind(this)
   }
 
   handleChangeDate(date) {
     this.setState({
-      dateCheck: date
-    });
+      dateCheck: date,
+    })
   }
   handleChangeDate2(date) {
     this.setState({
-      dateCheck2: date
-    });
+      dateCheck2: date,
+    })
   }
   removeData = async (value) => {
-    let result = _.remove(this.state.allpostcode, prop =>{
+    let result = _.remove(this.state.allpostcode, (prop) => {
       return prop.F25 !== value.F25
     })
     this.setState({
@@ -69,7 +69,6 @@ class Dashboard extends React.Component {
     body.datefrom = `${datefrom.year()}-${datefrom.month() + 1}-${datefrom.date()}`
     body.dateto = `${dateto.year()}-${dateto.month() + 1}-${dateto.date()}`
     let result = await axios.post(`${process.env.REACT_APP_API_IP}/postcodes`, body)
-    console.log(result.data)
     try {
       this.setState({
         allpostcode: result.data,
@@ -121,22 +120,25 @@ class Dashboard extends React.Component {
     if (error) {
       return <div className="container">Error: {error.message}</div>
     } else if (!isLoaded) {
-      return <div className="container">
-        <Label>Loading...</Label>
-        <Spinner size="sm" color="primary" />{' '}
-        <Spinner size="sm" color="primary" />{' '}
-        <Spinner size="sm" color="primary" />{' '}
-      </div>
+      return (
+        <div className="container">
+          <Label>Loading...</Label>
+          <Spinner size="sm" color="primary" /> <Spinner size="sm" color="primary" />{" "}
+          <Spinner size="sm" color="primary" />{" "}
+        </div>
+      )
     } else {
       return (
         <>
           <PanelHeader size="sm" />
           <div className="content">
             <Row>
-              <Col xs={12} md={12} >
+              <Col xs={12} md={12}>
                 <Card className="card-chart">
                   <CardHeader>
-                    <h2 className="h2">ข้อมูลเลขไปรษณีย์หนังสือออกในระบบสำนักงานอัตโนมัติ</h2>
+                    <h2 className="h2">
+                      ข้อมูลเลขไปรษณีย์หนังสือออกในระบบสำนักงานอัตโนมัติ
+                    </h2>
                   </CardHeader>
                   <CardBody>
                     <Row>
@@ -162,62 +164,64 @@ class Dashboard extends React.Component {
                       <Col></Col>
                     </Row>
                     <Form onSubmit={this.handleSubmit}>
-                    <Row>
-                      <Col>
-                        <Label>เลขที่พัสดุ:</Label>
-                        <Input
-                          id="postcode"
-                          name="postcode"
-                          placeholder="ระบุเลขที่พัสดุ"
-                          type="text"
-                        />
-                      </Col>
-                      <Col>
-                        <Label>เลขที่หนังสือ:</Label>
-                        <Input
-                          id="f4"
-                          name="f4"
-                          placeholder="ระบุเลขที่หนังสือ"
-                          type="text"
-                        />
-                      </Col>
-                      <Col>
-                        <Label>เลขที่หนังสือสำนัก</Label>
-                        <Input
-                          id="prebookno"
-                          name="prebookno"
-                          placeholder="ระบุเลขที่หนังสือสำนัก"
-                          type="text"
-                        />
-                      </Col>
-                    </Row>
-                    
-                    <Button color="primary" >
-                      <i className="now-ui-icons ui-1_zoom-bold"></i>&nbsp;&nbsp;Search
+                      <Row>
+                        <Col>
+                          <Label>เลขที่พัสดุ:</Label>
+                          <Input
+                            id="postcode"
+                            name="postcode"
+                            placeholder="ระบุเลขที่พัสดุ"
+                            type="text"
+                          />
+                        </Col>
+                        <Col>
+                          <Label>เลขที่หนังสือ:</Label>
+                          <Input
+                            id="f4"
+                            name="f4"
+                            placeholder="ระบุเลขที่หนังสือ"
+                            type="text"
+                          />
+                        </Col>
+                        <Col>
+                          <Label>เลขที่หนังสือสำนัก</Label>
+                          <Input
+                            id="prebookno"
+                            name="prebookno"
+                            placeholder="ระบุเลขที่หนังสือสำนัก"
+                            type="text"
+                          />
+                        </Col>
+                      </Row>
+
+                      <Button color="primary">
+                        <i className="now-ui-icons ui-1_zoom-bold"></i>
+                        &nbsp;&nbsp;Search
                       </Button>
                     </Form>
                     <hr></hr>
                     <Row>
-                        <Col xs={12}>
-                          <Label>กรองข้อมูล</Label>
-                          <Input
-                            type="text"
-                            name="searchTxt"
-                            id="searchTxt"
-                            placeholder="ระบุข้อมูลที่ต้องการให้กรอง"
-                            onChange={this.handleChangeSearch}
-                          />
-                        </Col>
-                      </Row>
+                      <Col xs={12}>
+                        <Label>กรองข้อมูล</Label>
+                        <Input
+                          type="text"
+                          name="searchTxt"
+                          id="searchTxt"
+                          placeholder="ระบุข้อมูลที่ต้องการให้กรอง"
+                          onChange={this.handleChangeSearch}
+                        />
+                      </Col>
+                    </Row>
                     <hr></hr>
                     <ReactHTMLTableToExcel
-                      table="suballdistrict"
-                      filename={"suballdistrict_" + uuidv4()}
+                      table="reportems"
+                      filename={"postcode_" + uuidv4()}
                       className="btn btn-primary"
                       sheet="Item"
-                      buttonText="Export Excel" />
-                       
-                    <Table responsive hover size="sm" id="suballdistrict">
+                      buttonText="Export Excel"
+                    />
+
+                    <Table responsive hover size="sm" id="reportems">
                       <thead className="text-primary text-center">
                         <tr>
                           <th colSpan={2}>#</th>
@@ -231,20 +235,21 @@ class Dashboard extends React.Component {
                       </thead>
                       <tbody className="text-center">
                         {filteredData.map((prop, key) => {
-                          let addressresult = ''
+                          let addressresult = ""
                           if (prop.address) {
                             let address = prop.address.split(" ")
                             let addresslen = address.length - 2
                             addressresult = address[addresslen]
                           } else {
-                            addressresult = ''
+                            addressresult = ""
                           }
                           return (
-                            <tr key={key+1}>
+                            <tr key={key + 1}>
                               <td>
-                                <i className="now-ui-icons ui-1_simple-remove" 
-                                onClick={this.removeData.bind(this,prop)}>
-                                </i>
+                                <i
+                                  className="now-ui-icons ui-1_simple-remove"
+                                  onClick={this.removeData.bind(this, prop)}
+                                ></i>
                               </td>
                               <td>{key + 1}</td>
                               <td>{prop.F7}</td>
@@ -259,16 +264,15 @@ class Dashboard extends React.Component {
                       </tbody>
                     </Table>
                   </CardBody>
-                  <CardFooter>
-                  </CardFooter>
+                  <CardFooter></CardFooter>
                 </Card>
               </Col>
             </Row>
           </div>
         </>
-      );
+      )
     }
   }
 }
 
-export default Dashboard;
+export default Dashboard

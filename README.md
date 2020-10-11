@@ -3,8 +3,9 @@
 In the project directory, you can run:
 
 ## Installer
+
 npm --add-python-to-path='true' --debug install --global windows-build-tools
-npm config set python "C:\Users\***usernameYour***\.windows-build-tools\python27"
+npm config set python "C:\Users\***usernameYour\***\.windows-build-tools\python27"
 // Install python for node-sass and set path
 if you can't run start I will npm install node-sass success
 

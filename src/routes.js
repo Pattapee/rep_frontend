@@ -1,4 +1,5 @@
 import Dashboard from "views/Dashboard.jsx"
+import ChangeBookno from "views/ChangeBookno.jsx"
 import Notifications from "views/Notifications.jsx"
 import Icons from "views/Icons.jsx"
 import Maps from "views/Maps.jsx"
@@ -6,9 +7,16 @@ import UserPage from "views/UserPage.jsx"
 var dashRoutes = [
   {
     path: "/dashboard",
-    name: "Postcode",
+    name: "ข้อมูลหนังสือส่ง",
     icon: "business_chart-bar-32",
     component: Dashboard,
+    layout: "/omb",
+  },
+  {
+    path: "/changebookno",
+    name: "เปลี่ยนเลขที่หนังสือ",
+    icon: "ui-1_settings-gear-63",
+    component: ChangeBookno,
     layout: "/omb",
   },
   {
