@@ -113,8 +113,9 @@ class ChangeBookno extends React.Component {
       let prebookno = _.find(this.state.allprebookno, {
         BOOKNO: `${_.split(body.book_number, "/")[0]}/`,
       })
+      let maxF4 = +maxf4.data[0].F4 + 1
       let dataUpdatePCContent = {
-        F4: +maxf4.data[0].F4 + 1,
+        F4: _.padStart(maxF4, 5, "00"),
         PREBOOKNO: prebookno.BOOKNO,
         F1RUN: prebookno.BNID,
         CONTENTID: body.CONTENTID,
@@ -124,7 +125,7 @@ class ChangeBookno extends React.Component {
         dataUpdatePCContent
       )
       let dataUpdate = {
-        book_number: `${dataUpdatePCContent.PREBOOKNO}${dataUpdatePCContent.F4}`,
+        book_number: `${dataUpdatePCContent.PREBOOKNO}${maxF4}`,
         CONTENTID: body.CONTENTID,
       }
       let result = await axios.post(
@@ -132,7 +133,7 @@ class ChangeBookno extends React.Component {
         dataUpdate
       )
       if (resultcontent && result) {
-        this.notifymsg(`เปลี่ยนสำนักข้อมูลเรียบร้อยแล้ว ${result}`)
+        this.notifymsg(`เปลี่ยนสำนักข้อมูลเรียบร้อยแล้ว ${result.data}`)
       }
     } else {
       this.notifymsg("ค้นหาข้อมูลเรื่องร้องเรียนก่อน")
@@ -194,6 +195,7 @@ class ChangeBookno extends React.Component {
                             name="black_number"
                             id="black_number"
                             placeholder="ระบุข้อมูลเลขดำที่ "
+                            required="required"
                           />
                         </Col>
                         <Col></Col>
@@ -354,8 +356,8 @@ class ChangeBookno extends React.Component {
                       </Row>
                       <Row>
                         <Col>
-                          <Button color="success" disabled>
-                            <i className="now-ui-icons ui-1_zoom-bold"></i>
+                          <Button color="success">
+                            <i className="now-ui-icons loader_refresh"></i>
                             &nbsp;&nbsp;Update
                           </Button>
                         </Col>
