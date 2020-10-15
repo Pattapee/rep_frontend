@@ -41,7 +41,7 @@ class ChangeBookno extends React.Component {
   }
 
   onDismiss() {}
-  notify(black_number) {
+  notify(black_number,book_number) {
     var options = {}
     options = {
       place: "tc",
@@ -50,7 +50,7 @@ class ChangeBookno extends React.Component {
           <div>
             ไม่มีข้อมูลการออกหนังสือครั้งสุดท้าย<br></br>{" "}
             <b>เรื่องร้องเรียนเลขดำที่ {black_number}</b><br></br>
-            <b>เลขที่หนังสือ {black_number}</b>
+            <b>เลขที่หนังสือ {book_number}</b>
           </div>
         </div>
       ),
@@ -81,6 +81,8 @@ class ChangeBookno extends React.Component {
     let formData = new FormData(e.target)
     let body = {}
     formData.forEach((value, property) => (body[property] = value))
+    body.black_number = body.black_number.trim()
+    body.book_number = body.book_number.trim()
     let result = await axios.post(
       `${process.env.REACT_APP_API_IP}/getcontentbook`,
       body
@@ -97,7 +99,7 @@ class ChangeBookno extends React.Component {
         console.error(error)
       }
     } else {
-      this.notify(body.black_number)
+      this.notify(body.black_number,body.book_number)
     }
   }
   async handleSubmitupdate(e) {
@@ -130,16 +132,13 @@ class ChangeBookno extends React.Component {
         book_number: `${dataUpdatePCContent.PREBOOKNO}${maxF4}`,
         CONTENTID: body.CONTENTID,
       }
-      console.log(dataUpdatePCContent)
-      console.log('#########################')
-      console.log(dataUpdate)
       let result = await axios.post(
         `${process.env.REACT_APP_API_IP}/updatepublishbook`,
         dataUpdate
       )
     
       if (resultcontent && result) {
-        this.notifymsg(`เปลี่ยนสำนักข้อมูลเรียบร้อยแล้ว ${result.data.book_number}`)
+        this.notifymsg(`เปลี่ยนสำนักข้อมูลเรียบร้อยแล้ว`)
       }
     } else {
       this.notifymsg("ค้นหาข้อมูลเรื่องร้องเรียนก่อน")
@@ -225,7 +224,7 @@ class ChangeBookno extends React.Component {
                         <Col>
                           <Button color="primary">
                             <i className="now-ui-icons ui-1_zoom-bold"></i>
-                            &nbsp;&nbsp;Search
+                            &nbsp;&nbsp;ค้นหาข้อมูล
                           </Button>
                         </Col>
                         <Col></Col>
@@ -308,7 +307,7 @@ class ChangeBookno extends React.Component {
                       <Row>
                         <Col>
                           <FormGroup>
-                            <Label for="exampleSelectMulti">เลือกปีงบประมาณ</Label>
+                            <Label for="exampleSelectMulti">เลือกปี</Label>
                             <Input
                               type="select"
                               name="year"
@@ -378,7 +377,7 @@ class ChangeBookno extends React.Component {
                         <Col>
                           <Button color="success">
                             <i className="now-ui-icons loader_refresh"></i>
-                            &nbsp;&nbsp;Update
+                            &nbsp;&nbsp;เปลี่ยนเลขที่หนังสือ
                           </Button>
                         </Col>
                         <Col></Col>
