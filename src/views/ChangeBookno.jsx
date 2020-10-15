@@ -49,7 +49,8 @@ class ChangeBookno extends React.Component {
         <div>
           <div>
             ไม่มีข้อมูลการออกหนังสือครั้งสุดท้าย<br></br>{" "}
-            <b>เรื่องร้องเรียนเลขดำที่ {black_number}</b>
+            <b>เรื่องร้องเรียนเลขดำที่ {black_number}</b><br></br>
+            <b>เลขที่หนังสือ {black_number}</b>
           </div>
         </div>
       ),
@@ -68,7 +69,7 @@ class ChangeBookno extends React.Component {
           <div>{msg}</div>
         </div>
       ),
-      type: "danger",
+      type: "success",
       icon: "now-ui-icons ui-1_bell-53",
       autoDismiss: 7,
     }
@@ -85,6 +86,7 @@ class ChangeBookno extends React.Component {
       body
     )
     if (_.first(result.data)) {
+      this.notifymsg('ค้นหาข้อมูลสำเร็จ')
       try {
         this.setState({
           publishbook: _.first(result.data),
@@ -111,7 +113,7 @@ class ChangeBookno extends React.Component {
       }
       let maxf4 = await axios.post(`${process.env.REACT_APP_API_IP}/getmaxf4`, data)
       let prebookno = _.find(this.state.allprebookno, {
-        BOOKNO: `${_.split(body.book_number, "/")[0]}/`,
+        BOOKNO: `${_.split(body.prebookno.BOOKNO, "/")[0]}/`,
       })
       let maxF4 = +maxf4.data[0].F4 + 1
       let dataUpdatePCContent = {
@@ -128,12 +130,16 @@ class ChangeBookno extends React.Component {
         book_number: `${dataUpdatePCContent.PREBOOKNO}${maxF4}`,
         CONTENTID: body.CONTENTID,
       }
+      console.log(dataUpdatePCContent)
+      console.log('#########################')
+      console.log(dataUpdate)
       let result = await axios.post(
         `${process.env.REACT_APP_API_IP}/updatepublishbook`,
         dataUpdate
       )
+    
       if (resultcontent && result) {
-        this.notifymsg(`เปลี่ยนสำนักข้อมูลเรียบร้อยแล้ว ${result.data}`)
+        this.notifymsg(`เปลี่ยนสำนักข้อมูลเรียบร้อยแล้ว ${result.data.book_number}`)
       }
     } else {
       this.notifymsg("ค้นหาข้อมูลเรื่องร้องเรียนก่อน")
@@ -189,12 +195,26 @@ class ChangeBookno extends React.Component {
                     <Form onSubmit={this.handleSubmit}>
                       <Row>
                         <Col>
-                          <Label>ข้อมูลเลขดำที่</Label>
+                          <Label>เลขดำที่</Label>
                           <Input
                             type="text"
                             name="black_number"
                             id="black_number"
                             placeholder="ระบุข้อมูลเลขดำที่ "
+                            required="required"
+                          />
+                        </Col>
+                        <Col></Col>
+                        <Col></Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Label>เลขที่หนังสือ</Label>
+                          <Input
+                            type="text"
+                            name="book_number"
+                            id="book_number"
+                            placeholder="ระบุข้อมูลเลขที่หนังสือ "
                             required="required"
                           />
                         </Col>

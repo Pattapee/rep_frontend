@@ -136,9 +136,10 @@ class Dashboard extends React.Component {
               <Col xs={12} md={12}>
                 <Card className="card-chart">
                   <CardHeader>
-                    <h2 className="h2">
-                      ข้อมูลเลขไปรษณีย์หนังสือออกในระบบสำนักงานอัตโนมัติ
-                    </h2>
+                  <h5 className="title">ข้อมูลเลขไปรษณีย์หนังสือออกในระบบสำนักงานอัตโนมัติ</h5>
+                  <p className="category">
+                      ใช้สำหรับค้นข้อมูลหนังสือที่ได้ทำการออกเลขจากระบบ
+                    </p>
                   </CardHeader>
                   <CardBody>
                     <Row>
