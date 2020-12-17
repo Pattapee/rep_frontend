@@ -21,6 +21,7 @@
     "react-chartjs-2": "2.7.6",
     "react-datepicker": "^3.0.0",
     "react-dom": "16.8.6",
+    "react-excel-workbook": "0.0.4",
     "react-google-maps": "9.4.5",
     "react-html-table-to-excel": "^2.0.0",
     "react-image-file-resizer": "^0.3.1",

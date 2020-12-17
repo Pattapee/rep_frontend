@@ -23,8 +23,10 @@ import moment from "moment"
 import "moment/locale/th"
 import DatePicker from "react-datepicker"
 import ReactHTMLTableToExcel from "react-html-table-to-excel"
+import Workbook from "react-excel-workbook";
 import { v4 as uuidv4 } from "uuid"
 import * as _ from "lodash"
+
 
 class Dashboard extends React.Component {
   constructor() {
@@ -69,6 +71,16 @@ class Dashboard extends React.Component {
     body.datefrom = `${datefrom.year()}-${datefrom.month() + 1}-${datefrom.date()}`
     body.dateto = `${dateto.year()}-${dateto.month() + 1}-${dateto.date()}`
     let result = await axios.post(`${process.env.REACT_APP_API_IP}/postcodes`, body)
+    await _.map(result.data,(prop) =>{
+      if (prop.address) {
+      let address = prop.address.split(" ")
+      let addresslen = address.length - 2
+      prop.addressresult = address[addresslen]
+      } else {
+      prop.addressresult = ""
+      }
+      return prop
+    })
     try {
       this.setState({
         allpostcode: result.data,
@@ -89,10 +101,20 @@ class Dashboard extends React.Component {
     formData.forEach((value, property) => (body[property] = value))
     body.datefrom = `${datefrom.year()}-${datefrom.month() + 1}-${datefrom.date()}`
     body.dateto = `${dateto.year()}-${dateto.month() + 1}-${dateto.date()}`
-    let result = await axios.post(`${process.env.REACT_APP_API_IP}/postcodes`, body)
+    let result = (await axios.post(`${process.env.REACT_APP_API_IP}/postcodes`, body))
+    await _.map(result.data,(prop) =>{
+      if (prop.address) {
+      let address = prop.address.split(" ")
+      let addresslen = address.length - 2
+      prop.addressresult = address[addresslen]
+      } else {
+      prop.addressresult = ""
+      }
+      return prop
+    })
     try {
       this.setState({
-        allpostcode: result.data,
+        allpostcode: result,
         isLoaded: true,
       })
     } catch (error) {
@@ -214,13 +236,31 @@ class Dashboard extends React.Component {
                       </Col>
                     </Row>
                     <hr></hr>
-                    <ReactHTMLTableToExcel
+                    {/* <ReactHTMLTableToExcel
                       table="reportems"
                       filename={"postcode_" + uuidv4()}
                       className="btn btn-primary"
                       sheet="Item"
                       buttonText="Export Excel"
-                    />
+                    /> */}
+                    &nbsp;&nbsp;&nbsp;
+            <Workbook
+              filename={`postcode_${uuidv4()}.xlsx`}
+              element={
+                <button className="btn btn-primary">
+                  Export Excel
+                </button>
+              }
+            >
+              <Workbook.Sheet data={filteredData} name="PostCode">
+                <Workbook.Column label="ชื่อผู้รับ" value={"F7"} />
+                <Workbook.Column label="ที่อยู่" value={"address"} />
+                <Workbook.Column label="จังหวัด" value={"addressresult"} />
+                <Workbook.Column label="เลขที่พัสดุ" value={"F25"} />
+                <Workbook.Column label="เลขที่หนังสือ" value={"noOrganization"} />
+                <Workbook.Column label="เลขที่หนังสือสำนัก" value={"noDepartment"} />
+              </Workbook.Sheet>
+            </Workbook>
 
                     <Table responsive hover size="sm" id="reportems">
                       <thead className="text-primary text-center">
@@ -236,14 +276,7 @@ class Dashboard extends React.Component {
                       </thead>
                       <tbody className="text-center">
                         {filteredData.map((prop, key) => {
-                          let addressresult = ""
-                          if (prop.address) {
-                            let address = prop.address.split(" ")
-                            let addresslen = address.length - 2
-                            addressresult = address[addresslen]
-                          } else {
-                            addressresult = ""
-                          }
+
                           return (
                             <tr key={key + 1}>
                               <td>
@@ -255,7 +288,7 @@ class Dashboard extends React.Component {
                               <td>{key + 1}</td>
                               <td>{prop.F7}</td>
                               <td>{prop.address}</td>
-                              <td>{addressresult}</td>
+                              <td>{prop.addressresult}</td>
                               <td>{prop.F25}</td>
                               <td>{prop.noOrganization}</td>
                               <td>{prop.noDepartment}</td>
