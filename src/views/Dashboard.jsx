@@ -22,7 +22,6 @@ import axios from "axios"
 import moment from "moment"
 import "moment/locale/th"
 import DatePicker from "react-datepicker"
-import ReactHTMLTableToExcel from "react-html-table-to-excel"
 import Workbook from "react-excel-workbook";
 import { v4 as uuidv4 } from "uuid"
 import * as _ from "lodash"
@@ -76,8 +75,13 @@ class Dashboard extends React.Component {
       let address = prop.address.split(" ")
       let addresslen = address.length - 2
       prop.addressresult = address[addresslen]
+        if(address[addresslen]){
+        prop.addressresult = address[addresslen]
+        } else{
+        prop.addressresult = "-"
+        }
       } else {
-      prop.addressresult = ""
+      prop.addressresult = "-"
       }
       return prop
     })
@@ -107,14 +111,19 @@ class Dashboard extends React.Component {
       let address = prop.address.split(" ")
       let addresslen = address.length - 2
       prop.addressresult = address[addresslen]
+        if(address[addresslen]){
+        prop.addressresult = address[addresslen]
+        } else{
+        prop.addressresult = "-"
+        }
       } else {
-      prop.addressresult = ""
+      prop.addressresult = "-"
       }
       return prop
     })
     try {
       this.setState({
-        allpostcode: result,
+        allpostcode: result.data,
         isLoaded: true,
       })
     } catch (error) {
@@ -236,32 +245,24 @@ class Dashboard extends React.Component {
                       </Col>
                     </Row>
                     <hr></hr>
-                    {/* <ReactHTMLTableToExcel
-                      table="reportems"
-                      filename={"postcode_" + uuidv4()}
-                      className="btn btn-primary"
-                      sheet="Item"
-                      buttonText="Export Excel"
-                    /> */}
                     &nbsp;&nbsp;&nbsp;
-            <Workbook
-              filename={`postcode_${uuidv4()}.xlsx`}
-              element={
-                <button className="btn btn-primary">
-                  Export Excel
-                </button>
-              }
-            >
-              <Workbook.Sheet data={filteredData} name="PostCode">
-                <Workbook.Column label="ชื่อผู้รับ" value={"F7"} />
-                <Workbook.Column label="ที่อยู่" value={"address"} />
-                <Workbook.Column label="จังหวัด" value={"addressresult"} />
-                <Workbook.Column label="เลขที่พัสดุ" value={"F25"} />
-                <Workbook.Column label="เลขที่หนังสือ" value={"noOrganization"} />
-                <Workbook.Column label="เลขที่หนังสือสำนัก" value={"noDepartment"} />
-              </Workbook.Sheet>
-            </Workbook>
-
+                    <Workbook
+                      filename={`postcode_${uuidv4()}.xlsx`}
+                      element={
+                        <button className="btn btn-primary">
+                          Export Excel
+                        </button>
+                      }
+                    >
+                      <Workbook.Sheet data={filteredData} name="PostCode">
+                        <Workbook.Column label="ชื่อผู้รับ" value={"F7"} />
+                        <Workbook.Column label="ที่อยู่" value={"address"} />
+                        <Workbook.Column label="จังหวัด" value={"addressresult"} />
+                        <Workbook.Column label="เลขที่พัสดุ" value={"F25"} />
+                        <Workbook.Column label="เลขที่หนังสือ" value={"noOrganization"} />
+                        <Workbook.Column label="เลขที่หนังสือสำนัก" value={"noDepartment"} />
+                      </Workbook.Sheet>
+                    </Workbook>
                     <Table responsive hover size="sm" id="reportems">
                       <thead className="text-primary text-center">
                         <tr>
@@ -276,7 +277,6 @@ class Dashboard extends React.Component {
                       </thead>
                       <tbody className="text-center">
                         {filteredData.map((prop, key) => {
-
                           return (
                             <tr key={key + 1}>
                               <td>
