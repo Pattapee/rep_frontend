@@ -15,9 +15,8 @@ import {
 } from "reactstrap"
 import PanelHeader from "components/PanelHeader/PanelHeader.jsx"
 import axios from "axios"
-// import moment from "moment"
-// import "moment/locale/th"
-// import DatePicker from "react-datepicker"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faSearch } from "@fortawesome/free-solid-svg-icons"
 import * as _ from "lodash"
 import NotificationAlert from "react-notification-alert"
 
@@ -41,7 +40,7 @@ class ChangeBookno extends React.Component {
   }
 
   onDismiss() {}
-  notify(black_number,book_number) {
+  notify(black_number, book_number) {
     var options = {}
     options = {
       place: "tc",
@@ -49,7 +48,8 @@ class ChangeBookno extends React.Component {
         <div>
           <div>
             ไม่มีข้อมูลการออกหนังสือครั้งสุดท้าย<br></br>{" "}
-            <b>เรื่องร้องเรียนเลขดำที่ {black_number}</b><br></br>
+            <b>เรื่องร้องเรียนเลขดำที่ {black_number}</b>
+            <br></br>
             <b>เลขที่หนังสือ {book_number}</b>
           </div>
         </div>
@@ -88,7 +88,7 @@ class ChangeBookno extends React.Component {
       body
     )
     if (_.first(result.data)) {
-      this.notifymsg('ค้นหาข้อมูลสำเร็จ')
+      this.notifymsg("ค้นหาข้อมูลสำเร็จ")
       try {
         this.setState({
           publishbook: _.first(result.data),
@@ -99,7 +99,7 @@ class ChangeBookno extends React.Component {
         console.error(error)
       }
     } else {
-      this.notify(body.black_number,body.book_number)
+      this.notify(body.black_number, body.book_number)
     }
   }
   async handleSubmitupdate(e) {
@@ -108,9 +108,15 @@ class ChangeBookno extends React.Component {
     let body = {}
     formData.forEach((value, property) => (body[property] = value))
     if (body.CONTENTID) {
+      console.log(body)
       body.prebookno = _.find(this.state.allprebookno, { BNID: +body.prebookno })
+      let newBNID = (
+        await axios.post(`${process.env.REACT_APP_API_IP}/getbnidOffice`, {
+          prebookno: body.prebookno.BOOKNO.substr(0, 5) + "/",
+        })
+      ).data
       let data = {
-        F1RUN: body.prebookno.BNID,
+        F1RUN: newBNID.BNID,
         year: body.year,
       }
       let maxf4 = await axios.post(`${process.env.REACT_APP_API_IP}/getmaxf4`, data)
@@ -121,7 +127,7 @@ class ChangeBookno extends React.Component {
       let dataUpdatePCContent = {
         F4: _.padStart(maxF4, 5, "00"),
         PREBOOKNO: prebookno.BOOKNO,
-        F1RUN: prebookno.BNID,
+        F1RUN: newBNID.BNID,
         CONTENTID: body.CONTENTID,
       }
       let resultcontent = await axios.post(
@@ -136,9 +142,9 @@ class ChangeBookno extends React.Component {
         `${process.env.REACT_APP_API_IP}/updatepublishbook`,
         dataUpdate
       )
-    
       if (resultcontent && result) {
-        this.notifymsg(`เปลี่ยนสำนักข้อมูลเรียบร้อยแล้ว`)
+        alert("เปลี่ยนสำนักข้อมูลเรียบร้อยแล้ว")
+        window.location.reload()
       }
     } else {
       this.notifymsg("ค้นหาข้อมูลเรื่องร้องเรียนก่อน")
@@ -222,8 +228,8 @@ class ChangeBookno extends React.Component {
                       </Row>
                       <Row>
                         <Col>
-                          <Button color="primary">
-                            <i className="now-ui-icons ui-1_zoom-bold"></i>
+                          <Button color="primary" size="sm">
+                            <FontAwesomeIcon icon={faSearch} />
                             &nbsp;&nbsp;ค้นหาข้อมูล
                           </Button>
                         </Col>

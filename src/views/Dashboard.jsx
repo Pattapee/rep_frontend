@@ -16,16 +16,18 @@ import {
   Form,
 } from "reactstrap"
 
-// core components
 import PanelHeader from "components/PanelHeader/PanelHeader.jsx"
 import axios from "axios"
 import moment from "moment"
+import MomentUtils from "@date-io/moment"
 import "moment/locale/th"
-import DatePicker from "react-datepicker"
-import Workbook from "react-excel-workbook";
+import { MuiPickersUtilsProvider, DatePicker } from "material-ui-thai-datepickers"
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faSearch } from "@fortawesome/free-solid-svg-icons"
+import Workbook from "react-excel-workbook"
 import { v4 as uuidv4 } from "uuid"
 import * as _ from "lodash"
-
 
 class Dashboard extends React.Component {
   constructor() {
@@ -70,18 +72,18 @@ class Dashboard extends React.Component {
     body.datefrom = `${datefrom.year()}-${datefrom.month() + 1}-${datefrom.date()}`
     body.dateto = `${dateto.year()}-${dateto.month() + 1}-${dateto.date()}`
     let result = await axios.post(`${process.env.REACT_APP_API_IP}/postcodes`, body)
-    await _.map(result.data,(prop) =>{
+    await _.map(result.data, (prop) => {
       if (prop.address) {
-      let address = prop.address.split(" ")
-      let addresslen = address.length - 2
-      prop.addressresult = address[addresslen]
-        if(address[addresslen]){
+        let address = prop.address.split(" ")
+        let addresslen = address.length - 2
         prop.addressresult = address[addresslen]
-        } else{
-        prop.addressresult = "-"
+        if (address[addresslen]) {
+          prop.addressresult = address[addresslen]
+        } else {
+          prop.addressresult = "-"
         }
       } else {
-      prop.addressresult = "-"
+        prop.addressresult = "-"
       }
       return prop
     })
@@ -105,19 +107,19 @@ class Dashboard extends React.Component {
     formData.forEach((value, property) => (body[property] = value))
     body.datefrom = `${datefrom.year()}-${datefrom.month() + 1}-${datefrom.date()}`
     body.dateto = `${dateto.year()}-${dateto.month() + 1}-${dateto.date()}`
-    let result = (await axios.post(`${process.env.REACT_APP_API_IP}/postcodes`, body))
-    await _.map(result.data,(prop) =>{
+    let result = await axios.post(`${process.env.REACT_APP_API_IP}/postcodes`, body)
+    await _.map(result.data, (prop) => {
       if (prop.address) {
-      let address = prop.address.split(" ")
-      let addresslen = address.length - 2
-      prop.addressresult = address[addresslen]
-        if(address[addresslen]){
+        let address = prop.address.split(" ")
+        let addresslen = address.length - 2
         prop.addressresult = address[addresslen]
-        } else{
-        prop.addressresult = "-"
+        if (address[addresslen]) {
+          prop.addressresult = address[addresslen]
+        } else {
+          prop.addressresult = "-"
         }
       } else {
-      prop.addressresult = "-"
+        prop.addressresult = "-"
       }
       return prop
     })
@@ -167,34 +169,45 @@ class Dashboard extends React.Component {
               <Col xs={12} md={12}>
                 <Card className="card-chart">
                   <CardHeader>
-                  <h5 className="title">ข้อมูลเลขไปรษณีย์หนังสือออกในระบบสำนักงานอัตโนมัติ</h5>
-                  <p className="category">
+                    <h5 className="title">
+                      ข้อมูลเลขไปรษณีย์หนังสือออกในระบบสำนักงานอัตโนมัติ
+                    </h5>
+                    <p className="category">
                       ใช้สำหรับค้นข้อมูลหนังสือที่ได้ทำการออกเลขจากระบบ
                     </p>
                   </CardHeader>
                   <CardBody>
                     <Row>
                       <Col>
-                        <Label>จาก:</Label>
-                        <DatePicker
-                          selected={this.state.dateCheck}
-                          onChange={this.handleChangeDate}
-                          dateFormat="dd / MM / yyyy"
-                          className="form-control"
-                        />
+                        <Label for="Check">จาก: </Label> &nbsp; &nbsp; &nbsp;
+                        <MuiPickersUtilsProvider utils={MomentUtils} locale={"th"}>
+                          <DatePicker
+                            format="DD/MM/YYYY"
+                            pickerHeaderFormat="DD/MM/YYYY"
+                            yearOffset={543}
+                            value={this.state.dateCheck}
+                            onChange={this.handleChangeDate}
+                            locale={"th"}
+                          />
+                        </MuiPickersUtilsProvider>
                         <br></br>
                         <br></br>
-                        <Label>ถึง:</Label>
-                        <DatePicker
-                          selected={this.state.dateCheck2}
-                          onChange={this.handleChangeDate2}
-                          dateFormat="dd / MM / yyyy"
-                          className="form-control"
-                        />
+                        <Label for="Check2">ถึง: </Label> &nbsp; &nbsp; &nbsp;
+                        <MuiPickersUtilsProvider utils={MomentUtils} locale={"th"}>
+                          <DatePicker
+                            format="DD/MM/YYYY"
+                            pickerHeaderFormat="DD/MM/YYYY"
+                            yearOffset={543}
+                            value={this.state.dateCheck2}
+                            onChange={this.handleChangeDate2}
+                            locale={"th"}
+                          />
+                        </MuiPickersUtilsProvider>
                       </Col>
                       <Col></Col>
                       <Col></Col>
                     </Row>
+                    <br></br>
                     <Form onSubmit={this.handleSubmit}>
                       <Row>
                         <Col>
@@ -225,9 +238,8 @@ class Dashboard extends React.Component {
                           />
                         </Col>
                       </Row>
-
-                      <Button color="primary">
-                        <i className="now-ui-icons ui-1_zoom-bold"></i>
+                      <Button color="primary" size="sm">
+                        <FontAwesomeIcon icon={faSearch} />
                         &nbsp;&nbsp;Search
                       </Button>
                     </Form>
@@ -247,10 +259,11 @@ class Dashboard extends React.Component {
                     <hr></hr>
                     &nbsp;&nbsp;&nbsp;
                     <Workbook
+                      size="sm"
                       filename={`postcode_${uuidv4()}.xlsx`}
                       element={
-                        <button className="btn btn-primary">
-                          Export Excel
+                        <button className="btn btn-primary" size="sm">
+                          <FontAwesomeIcon icon={faSearch} /> Export Excel
                         </button>
                       }
                     >
@@ -259,8 +272,14 @@ class Dashboard extends React.Component {
                         <Workbook.Column label="ที่อยู่" value={"address"} />
                         <Workbook.Column label="จังหวัด" value={"addressresult"} />
                         <Workbook.Column label="เลขที่พัสดุ" value={"F25"} />
-                        <Workbook.Column label="เลขที่หนังสือ" value={"noOrganization"} />
-                        <Workbook.Column label="เลขที่หนังสือสำนัก" value={"noDepartment"} />
+                        <Workbook.Column
+                          label="เลขที่หนังสือ"
+                          value={"noOrganization"}
+                        />
+                        <Workbook.Column
+                          label="เลขที่หนังสือสำนัก"
+                          value={"noDepartment"}
+                        />
                       </Workbook.Sheet>
                     </Workbook>
                     <Table responsive hover size="sm" id="reportems">

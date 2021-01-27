@@ -58,6 +58,6 @@ var dashRoutes = [
     component: Notifications,
     layout: "/omb",
     show: false,
-  }
+  },
 ]
 export default dashRoutes
